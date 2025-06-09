@@ -3,7 +3,7 @@ import numpy as np
 
 # Configurações
 np.random.seed(42)
-n_usuarios = 1000
+n_usuarios = 5000
 
 # Gerar dados
 dados = {

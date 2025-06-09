@@ -1,5 +1,7 @@
 import streamlit as st
 
+# https://docs.streamlit.io/develop/api-reference/execution-flow/st.form
+# https://docs.streamlit.io/develop/tutorials/chat-and-llm-apps/llm-quickstart
 
 st.title("Questionario para Treino Personalizado")
 st.subheader("Preencha suas informações:")
@@ -63,4 +65,3 @@ if st.button("🚀 Gerar Dados"):
 
         st.success("✅ Dados coletados com sucesso!")
         st.session_state["dados_usuario"] = dados
-
