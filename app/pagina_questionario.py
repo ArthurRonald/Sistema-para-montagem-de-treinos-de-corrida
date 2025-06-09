@@ -40,6 +40,10 @@ atividades_semana = st.slider(
 )
 
 
+if "dados_gerados" not in st.session_state:
+    st.session_state["dados_gerados"] = False
+
+
 if st.button("🚀 Gerar Dados"):
     erros = []
 
@@ -63,5 +67,13 @@ if st.button("🚀 Gerar Dados"):
             "Atividades/semana": int(atividades_semana)
         }
 
-        st.success("✅ Dados coletados com sucesso!")
         st.session_state["dados_usuario"] = dados
+        st.session_state["dados_gerados"] = True
+        st.success("✅ Dados coletados com sucesso!")
+
+# Botão separado para trocar de página
+if st.session_state["dados_gerados"]:
+    if st.button("Verifique seu Treino"):
+        st.switch_page("pagina_toDoList.py")
+
+       
