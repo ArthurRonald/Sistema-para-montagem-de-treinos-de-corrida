@@ -112,6 +112,26 @@ if st.button("🚀 Gerar Dados"):
         st.session_state["dados_usuario"] = dados
         st.session_state["dados_gerados"] = True
         st.success("✅ Dados coletados com sucesso!")
+modelo = joblib.load("modelo_utilizar.pkl")
+encoder1= joblib.load("encoder_objetivo.pkl")
+encoder2 = joblib.load("encoder_lesao.pkl")
+
+
+if st.button("🚀 Gerar treino"):
+    if not erros:
+        dados_do_input={
+            "Tempo (min)": int(tempo),
+            "Distância (km)": float(distancia),
+            "lesao_encoded": encoder2.transform([historico_lesao])[0],
+            "Pace (min/km)": float(pace),
+            "Atividades/semana": int(atividades_semana),
+            "objetivo_encoded": encoder1.transform([objetivo])[0],
+        }
+
+
+dados_input_df= pd.DataFrame([dados_do_input])
+previsao = modelo.predict(dados_input_df)
+
 
 if st.session_state["dados_gerados"]:
     if st.button("Verifique seu Treino"):
