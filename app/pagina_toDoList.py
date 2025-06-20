@@ -24,6 +24,8 @@ else:
         treino = pd.read_csv("AVANÇADO COM LESÃO.csv")
         st.write(treino)
 
+    st.button("Recomendação Inteligente")
+
     elif previsao == "intermediario" and historico_lesao == "Não":
         treino = pd.read_csv("INTERMEDIÁRIO SEM LESÃO.csv")
         st.write(treino)
