@@ -81,7 +81,7 @@ if "dados_gerados" not in st.session_state:
     st.session_state["dados_gerados"] = False
 
 if st.button("🚀 Salvar dados"):
-    
+
     nome_limpo = nome.strip()
 
     if not nome_limpo:
@@ -129,23 +129,29 @@ if st.button("🚀 Conferir treino"):
             dados_modelo = {
                 "Tempo (min)": int(tempo),
                 "Distância (km)": float(distancia),
-                "lesao_encoded": encoder2.transform([historico_lesao])[0],  # Sim=1, Não=0
+                # Sim=1, Não=0
+                "lesao_encoded": encoder2.transform([historico_lesao])[0],
                 "Pace (min/km)": float(pace),
                 "Atividades/semana": int(atividades_semana),
-                "objetivo_encoded": encoder1.transform([objetivo])[0],  # Bem-estar=0, Emagrecimento=1, Maratona=2
+                # Bem-estar=0, Emagrecimento=1, Maratona=2
+                "objetivo_encoded": encoder1.transform([objetivo])[0],
             }
             previsao = modelo.predict(pd.DataFrame([dados_modelo]))[0]
-    
-            st.session_state["nivel_usuario"] = {
+
+            st.session_state["previsao"] = {
                 0: "avancado",
                 1: "iniciante",
                 2: "intermediario"
-            }[previsao]      
+            }[previsao]
+
+            st.session_state["previsao"] = previsao
+            st.session_state["historico_lesao"] = historico_lesao
+
+            st.success("✅ Nível de corrida previsto com sucesso!")
+
         except Exception as e:
             st.error("Erro ao processar. Verifique os dados e tente novamente.")
 
-st.session_state["previsao"] = previsao
-st.session_state["historico_lesao"] = historico_lesao
 
 if st.session_state["dados_gerados"]:
     if st.button("Verifique seu Treino"):

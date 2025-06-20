@@ -1,25 +1,40 @@
-import pandas as pd
 import streamlit as st
-previsao = st.session_state.get("previsao", None)
-historico_lesao = st.session_state.get("historico_lesao", None)
+import pandas as pd
+
 st.title("Confira o treino ideal para o nível da atividade desejada")
-st.subheader(f'O nível adequado para sua atividade é **{previsao}**')
 
-if previsao== "avancado" and historico_lesao == "Não":
-    treino1= pd.read_csv("AVANÇADO SEM LESÃO.csv")
-    print(treino1)
+# Pega os dados do session_state
+previsao = st.session_state.get("previsao")
+historico_lesao = st.session_state.get(
+    "dados_usuario", {}).get("lesao_encoded")
 
-elif previsao== "avancado" and historico_lesao == "Sim":
-    treino2= pd.read_csv("AVANÇADO COM LESÃO.csv")
-    print(treino2)
-elif previsao== "intermediario" and historico_lesao == "Não":
-    treino3= pd.read_csv("INTERMEDIÁRIO SEM LESÃO.csv")
-    print(treino3)
-elif previsao== "intermediario" and historico_lesao == "Sim":
-    treino4= pd.read_csv("INTERMEDIÁRIO COM LESÃO.csv")
-    print(treino4)
-elif previsao== "iniciante" and historico_lesao == "Não":
-    treino5= pd.read_csv("INICIANTE SEM LESÃO.csv")
-    print(treino5)
-elif previsao== "iniciante" and historico_lesao == "Sim":
-    treino6= pd.read_csv("INICIANTE COM LESÃO.csv")    
+if previsao is None or historico_lesao is None:
+    st.error(
+        "❌ Dados do usuário não encontrados. Por favor, preencha o questionário primeiro.")
+else:
+    st.subheader(
+        f"O nível adequado para sua atividade é **{str(previsao).upper()}**")
+
+    if previsao == "avancado" and historico_lesao == "Não":
+        treino = pd.read_csv("AVANÇADO SEM LESÃO.csv")
+        st.dataframe(treino)
+
+    elif previsao == "avancado" and historico_lesao == "Sim":
+        treino = pd.read_csv("AVANÇADO COM LESÃO.csv")
+        st.dataframe(treino)
+
+    elif previsao == "intermediario" and historico_lesao == "Não":
+        treino = pd.read_csv("INTERMEDIÁRIO SEM LESÃO.csv")
+        st.dataframe(treino)
+
+    elif previsao == "intermediario" and historico_lesao == "Sim":
+        treino = pd.read_csv("INTERMEDIÁRIO COM LESÃO.csv")
+        st.dataframe(treino)
+
+    elif previsao == "iniciante" and historico_lesao == "Não":
+        treino = pd.read_csv("INICIANTE SEM LESÃO.csv")
+        st.dataframe(treino)
+
+    elif previsao == "iniciante" and historico_lesao == "Sim":
+        treino = pd.read_csv("INICIANTE COM LESÃO.csv")
+        st.dataframe(treino)
