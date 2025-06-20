@@ -5,7 +5,6 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
 
-
 st.title("Questionário para Treino Personalizado")
 st.subheader("Preencha suas informações:")
 
@@ -145,7 +144,8 @@ if st.button("🚀 Conferir treino"):
         except Exception as e:
             st.error("Erro ao processar. Verifique os dados e tente novamente.")
 
-
+st.session_state["previsao"] = previsao
+st.session_state["historico_lesao"] = historico_lesao
 
 if st.session_state["dados_gerados"]:
     if st.button("Verifique seu Treino"):
