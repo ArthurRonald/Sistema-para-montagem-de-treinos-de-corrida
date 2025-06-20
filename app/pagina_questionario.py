@@ -5,8 +5,6 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
 
-# https://docs.streamlit.io/develop/api-reference/execution-flow/st.form
-# https://docs.streamlit.io/develop/tutorials/chat-and-llm-apps/llm-quickstart
 
 st.title("Questionário para Treino Personalizado")
 st.subheader("Preencha suas informações:")
@@ -79,13 +77,12 @@ atividades_semana = st.slider(
     min_value=1, max_value=7,
     value=st.session_state.get("dados_usuario", {}).get("Atividades/semana", 1)
 )
-
+erros = []
 if "dados_gerados" not in st.session_state:
     st.session_state["dados_gerados"] = False
 
-if st.button("🚀 Gerar Dados"):
-    erros = []
-
+if st.button("🚀 Salvar dados"):
+    
     nome_limpo = nome.strip()
 
     if not nome_limpo:
@@ -126,20 +123,28 @@ encoder2 = joblib.load(os.path.join(CAMINHO_BASE, "encoder_lesao.pkl"))
 
 dados_gerados = None
 
-if st.button("🚀 Gerar treino"):
-    if not erros:
-        dados_gerados = {
-            "Tempo (min)": int(tempo),
-            "Distância (km)": float(distancia),
-            "lesao_encoded": encoder2.transform([historico_lesao])[0],
-            "Pace (min/km)": float(pace),
-            "Atividades/semana": int(atividades_semana),
-            "objetivo_encoded": encoder1.transform([objetivo])[0],
-        }
 
-if dados_gerados:
-    dados_input_df = pd.DataFrame([dados_gerados])
-    previsao = modelo.predict(dados_input_df)
+if st.button("🚀 Conferir treino"):
+    if st.session_state.get("dados_gerados", False):
+        try:
+            dados_modelo = {
+                "Tempo (min)": int(tempo),
+                "Distância (km)": float(distancia),
+                "lesao_encoded": encoder2.transform([historico_lesao])[0],  # Sim=1, Não=0
+                "Pace (min/km)": float(pace),
+                "Atividades/semana": int(atividades_semana),
+                "objetivo_encoded": encoder1.transform([objetivo])[0],  # Bem-estar=0, Emagrecimento=1, Maratona=2
+            }
+            previsao = modelo.predict(pd.DataFrame([dados_modelo]))[0]
+    
+            st.session_state["nivel_usuario"] = {
+                0: "avancado",
+                1: "iniciante",
+                2: "intermediario"
+            }[previsao]      
+        except Exception as e:
+            st.error("Erro ao processar. Verifique os dados e tente novamente.")
+
 
 
 if st.session_state["dados_gerados"]:
