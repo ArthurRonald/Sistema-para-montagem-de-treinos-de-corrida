@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
-from pagina_questionario import previsao
-from pagina_questionario import historico_lesao
+previsao = st.session_state.get("previsao", None)
+historico_lesao = st.session_state.get("historico_lesao", None)
 st.title("Confira o treino ideal para o nível da atividade desejada")
 st.subheader(f'O nível adequado para sua atividade é **{previsao}**')
 
