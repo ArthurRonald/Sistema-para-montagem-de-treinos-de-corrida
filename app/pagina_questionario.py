@@ -73,10 +73,21 @@ pace = st.number_input(
 
 atividades_semana = st.slider(
     " Quantos dias por semana você pratica atividade física",
-    min_value=1, max_value=7,
+    min_value=0, max_value=7,
     value=st.session_state.get("dados_usuario", {}).get("Atividades/semana", 1)
 )
+
+
+CAMINHO_BASE = os.path.dirname(__file__)
+
+modelo = joblib.load(os.path.join(CAMINHO_BASE, "modelo_utilizar.pkl"))
+encoder1 = joblib.load(os.path.join(CAMINHO_BASE, "encoder_objetivo.pkl"))
+encoder2 = joblib.load(os.path.join(CAMINHO_BASE, "encoder_lesao.pkl"))
+
+dados_gerados = None
+
 erros = []
+
 if "dados_gerados" not in st.session_state:
     st.session_state["dados_gerados"] = False
 
@@ -114,16 +125,6 @@ if st.button("🚀 Salvar dados"):
         st.session_state["dados_gerados"] = True
         st.success("✅ Dados coletados com sucesso!")
 
-CAMINHO_BASE = os.path.dirname(__file__)
-
-modelo = joblib.load(os.path.join(CAMINHO_BASE, "modelo_utilizar.pkl"))
-encoder1 = joblib.load(os.path.join(CAMINHO_BASE, "encoder_objetivo.pkl"))
-encoder2 = joblib.load(os.path.join(CAMINHO_BASE, "encoder_lesao.pkl"))
-
-dados_gerados = None
-
-
-if st.button("🚀 Conferir treino"):
     if st.session_state.get("dados_gerados", False):
         try:
             dados_modelo = {
@@ -146,8 +147,6 @@ if st.button("🚀 Conferir treino"):
 
             st.session_state["previsao"] = previsao
             st.session_state["historico_lesao"] = historico_lesao
-
-            st.success("✅ Nível de corrida previsto com sucesso!")
 
         except Exception as e:
             st.error("Erro ao processar. Verifique os dados e tente novamente.")
