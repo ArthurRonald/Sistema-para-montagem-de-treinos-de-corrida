@@ -8,11 +8,12 @@ previsao = st.session_state.get("previsao")
 historico_lesao = st.session_state.get(
     "dados_usuario", {}).get("lesao_encoded")
 
-if previsao==0:
-    previsao="Avançado"
-elif previsao==1:
-    previsao= "Iniciante"
-else: previsao="Intermediário"
+if previsao == 0:
+    previsao = "Avançado"
+elif previsao == 1:
+    previsao = "Iniciante"
+else:
+    previsao = "Intermediário"
 
 if previsao is None or historico_lesao is None:
     st.error(
@@ -27,8 +28,6 @@ else:
     elif previsao == "Avançado" and historico_lesao == "Sim":
         treino = pd.read_csv("AVANÇADO COM LESÃO.csv")
         st.write(treino)
-
-    st.button("Recomendação Inteligente")
 
     elif previsao == "Intermediario" and historico_lesao == "Não":
         treino = pd.read_csv("INTERMEDIÁRIO SEM LESÃO.csv")
@@ -45,3 +44,5 @@ else:
     elif previsao == "Iniciante" and historico_lesao == "Sim":
         treino = pd.read_csv("INICIANTE COM LESÃO.csv")
         st.write(treino)
+
+st.button("Recomendação Inteligente")
