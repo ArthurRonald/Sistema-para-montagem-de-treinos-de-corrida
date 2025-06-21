@@ -44,20 +44,20 @@ objetivo = st.selectbox(
 )
 
 
-tempo = st.number_input(
-    "⏱ Tempo disponível por treino (min)", min_value=20, max_value=180, step=5,
-    value=st.session_state.get("dados_usuario", {}).get("Tempo (min)", 20)
-)
-
 st.text("")
 
 st.markdown("Para entendermos melhor o seu nível atual como corredor, "
             "responda às perguntas abaixo com base nos seus treinos anteriores.\n\n"
 
-            "Indique a distância média que costuma correr por treino e o seu pace médio "
+            "Indique o tempo médio e a distância média que costuma correr por treino e o seu pace médio "
             "(ritmo, em minutos por quilômetro). **Caso nunca tenha treinado antes, digite 0 nos campos.**")
 
 st.text("")
+
+tempo = st.number_input(
+    "⏱ Qual sua média de tempo por treino em minutos?", min_value=0, max_value=180, step=5,
+    value=st.session_state.get("dados_usuario", {}).get("Tempo (min)", 0)
+)
 
 distancia = st.number_input(
     " Distância média por treino (km)", min_value=0.0, max_value=50.0, step=0.5,
@@ -74,7 +74,7 @@ pace = st.number_input(
 atividades_semana = st.slider(
     " Quantos dias por semana você pratica atividade física",
     min_value=0, max_value=7,
-    value=st.session_state.get("dados_usuario", {}).get("Atividades/semana", 1)
+    value=st.session_state.get("dados_usuario", {}).get("Atividades/semana", 0)
 )
 
 
