@@ -1,3 +1,4 @@
+#iarecomendacao.py
 import openai
 
 openai.api_key = "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"

@@ -1,3 +1,4 @@
+#pagina_questionario2.py
 import streamlit as st
 from app.ia_recomendacao import gerar_treino_personalizado
 from app.gerar_pdf_treino import gerar_pdf
