@@ -1,113 +1,166 @@
-# import streamlit as st
-# import pandas as pd
-# from sklearn.preprocessing import LabelEncoder
-
-# st.title("Confira o treino ideal para o nível da atividade desejada")
-
-# previsao = st.session_state.get("previsao")
-# historico_lesao = st.session_state.get(
-#     "dados_usuario", {}).get("lesao_encoded")
-
-# if previsao == 0:
-#     previsao = "Avançado"
-# elif previsao == 1:
-#     previsao = "Iniciante"
-# else:
-#     previsao = "Intermediário"
-
-# if previsao is None or historico_lesao is None:
-#     st.error(
-#         "❌ Dados do usuário não encontrados. Por favor, preencha o questionário primeiro.")
-# else:
-#     st.subheader(
-#         f"O nível adequado para sua atividade é {str(previsao).upper()}")
-
-#     if previsao == "Avançado" and historico_lesao == "Não":
-#         treino = pd.read_csv("AVANÇADO SEM LESÃO.csv")
-#         st.write(treino)
-#     elif previsao == "Avançado" and historico_lesao == "Sim":
-#         treino = pd.read_csv("AVANÇADO COM LESÃO.csv")
-#         st.write(treino)
-
-#     elif previsao == "Intermediario" and historico_lesao == "Não":
-#         treino = pd.read_csv("INTERMEDIÁRIO SEM LESÃO.csv")
-#         st.write(treino)
-
-#     elif previsao == "Intermediario" and historico_lesao == "Sim":
-#         treino = pd.read_csv("INTERMEDIÁRIO COM LESÃO.csv")
-#         st.write(treino)
-
-#     elif previsao == "Iniciante" and historico_lesao == "Não":
-#         treino = pd.read_csv("INICIANTE SEM LESÃO.csv")
-#         st.write(treino)
-
-#     elif previsao == "Iniciante" and historico_lesao == "Sim":
-#         treino = pd.read_csv("INICIANTE COM LESÃO.csv")
-#         st.write(treino)
-
-# st.button("Recomendação Inteligente")
-
 import streamlit as st
-import pandas as pd
-from sklearn.preprocessing import LabelEncoder
+from app.ia_recomendacao import gerar_treino_personalizado
+from app.gerar_pdf_treino import gerar_pdf
 
-st.title("Confira o treino ideal para o nível da atividade desejada")
 
-# Obter dados da sessão
-previsao = st.session_state.get("previsao")
-historico_lesao = st.session_state.get(
-    "dados_usuario", {}).get("lesao_encoded")
+if "dados_usuario" in st.session_state:
 
-# Mapear previsão para texto
-if previsao == 0:
-    previsao = "Avançado"
-elif previsao == 1:
-    previsao = "Iniciante"
-else:
-    previsao = "Intermediário"
+    dados = st.session_state["dados_usuario"]
 
-if previsao is None or historico_lesao is None:
-    st.error(
-        "❌ Dados do usuário não encontrados. Por favor, preencha o questionário primeiro.")
-else:
-    st.subheader(
-        f"O nível adequado para sua atividade é {str(previsao).upper()}")
+    if dados["Dias de treino"] == "10":
+        TOTAL_DIAS = 10
+        st.set_page_config(page_title="Treino 10 Dias")
+        st.title(f"🏃 Plano de Treino - {TOTAL_DIAS} Dias")
 
-    # Definir o nome do arquivo baseado nas condições
-    arquivo = None
+        if "treinos_10" not in st.session_state or len(st.session_state.treinos_10) != TOTAL_DIAS:
+            st.session_state.treinos_10 = [False] * TOTAL_DIAS
 
-    if previsao == "Avançado" and historico_lesao == "Não":
-        arquivo = "AVANÇADO SEM LESÃO.csv"
-    elif previsao == "Avançado" and historico_lesao == "Sim":
-        arquivo = "AVANÇADO COM LESÃO.csv"
-    elif previsao == "Intermediário" and historico_lesao == "Não":
-        arquivo = "INTERMEDIÁRIO SEM LESÃO.csv"
-    elif previsao == "Intermediário" and historico_lesao == "Sim":
-        arquivo = "INTERMEDIÁRIO COM LESÃO.csv"
-    elif previsao == "Iniciante" and historico_lesao == "Não":
-        arquivo = "INICIANTE SEM LESÃO.csv"
-    elif previsao == "Iniciante" and historico_lesao == "Sim":
-        arquivo = "INICIANTE COM LESÃO.csv"
+        proximo = None
+        for i, feito in enumerate(st.session_state.treinos_10):
+            if not feito:
+                proximo = i + 1
+                break
 
-    if arquivo:
-        try:
-            # Carregar o DataFrame
-            treino = pd.read_csv(arquivo)
+        st.subheader("📋 Lista de Treinos")
 
-            # Exibir o DataFrame de forma mais bonita
-            st.write("### Plano de Treino Recomendado")
-            # Ou use st.table(treino) para uma tabela estática
-            st.dataframe(treino, hide_index=True)
+        for i in range(TOTAL_DIAS):
+            dia = i + 1
+            if st.session_state.treinos_10[i]:
+                st.markdown(f"✅ Treino Dia {dia}")
+            elif dia == proximo:
+                if st.button(f"🚀 Iniciar Treino Dia {dia}"):
+                    st.session_state.dia_atual = dia
+                    st.session_state.origem = "todo_treino_10.py"
+                    st.switch_page("pages/treino_dia.py")
+            else:
+                st.markdown(f"🔒 Treino Dia {dia}")
 
-            # Opcional: Mostrar como expandir para ver todos os dados
-            st.info("🔍 Role para ver todos os exercícios recomendados.")
+        st.progress(sum(st.session_state.treinos_10) / TOTAL_DIAS)
 
-        except FileNotFoundError:
-            st.error(
-                f"Arquivo {arquivo} não encontrado. Verifique o caminho do arquivo.")
-        except Exception as e:
-            st.error(f"Erro ao carregar o arquivo: {e}")
-    else:
-        st.warning("Combinação de nível e histórico de lesão não reconhecida.")
+    elif dados["Dias de treino"] == "15":
 
-    st.button("Recomendação Inteligente")
+        TOTAL_DIAS = 15
+        st.set_page_config(page_title="Treino 15 Dias")
+        st.title(f"🏃 Plano de Treino - {TOTAL_DIAS} Dias")
+
+        if "treinos_15" not in st.session_state or len(st.session_state.treinos_15) != TOTAL_DIAS:
+            st.session_state.treinos_15 = [False] * TOTAL_DIAS
+
+        proximo = None
+        for i, feito in enumerate(st.session_state.treinos_15):
+            if not feito:
+                proximo = i + 1
+                break
+
+        st.subheader("📋 Lista de Treinos")
+        for i in range(TOTAL_DIAS):
+            dia = i + 1
+            if st.session_state.treinos_15[i]:
+                st.markdown(f"✅ Treino Dia {dia}")
+            elif dia == proximo:
+                if st.button(f"🚀 Iniciar Treino Dia {dia}"):
+                    st.session_state.dia_atual = dia
+                    st.session_state.origem = "todo_treino_15.py"
+                    st.switch_page("pages/treino_dia.py")
+            else:
+                st.markdown(f"🔒 Treino Dia {dia}")
+
+        st.progress(sum(st.session_state.treinos_15) / TOTAL_DIAS)
+
+    elif dados["Dias de Treino"] == "20":
+        TOTAL_DIAS = 20
+        st.set_page_config(page_title="Treino 20 Dias")
+        st.title(f"🏃 Plano de Treino - {TOTAL_DIAS} Dias")
+
+        if "treinos_20" not in st.session_state or len(st.session_state.treinos_20) != TOTAL_DIAS:
+            st.session_state.treinos_20 = [False] * TOTAL_DIAS
+
+        proximo = None
+        for i, feito in enumerate(st.session_state.treinos_20):
+            if not feito:
+                proximo = i + 1
+                break
+
+        st.subheader("📋 Lista de Treinos")
+        for i in range(TOTAL_DIAS):
+            dia = i + 1
+            if st.session_state.treinos_20[i]:
+                st.markdown(f"✅ Treino Dia {dia}")
+            elif dia == proximo:
+                if st.button(f"🚀 Iniciar Treino Dia {dia}"):
+                    st.session_state.dia_atual = dia
+                    st.session_state.origem = "todo_treino_20.py"
+                    st.switch_page("pages/treino_dia.py")
+            else:
+                st.markdown(f"🔒 Treino Dia {dia}")
+
+        st.progress(sum(st.session_state.treinos_20) / TOTAL_DIAS)
+
+    elif dados["Dias de Treino"] == "25":
+        TOTAL_DIAS = 25
+        st.set_page_config(page_title="Treino 25 Dias")
+        st.title(f"🏃 Plano de Treino - {TOTAL_DIAS} Dias")
+
+        if "treinos_25" not in st.session_state or len(st.session_state.treinos_25) != TOTAL_DIAS:
+            st.session_state.treinos_25 = [False] * TOTAL_DIAS
+
+        proximo = None
+        for i, feito in enumerate(st.session_state.treinos_25):
+            if not feito:
+                proximo = i + 1
+                break
+
+        st.subheader("📋 Lista de Treinos")
+        for i in range(TOTAL_DIAS):
+            dia = i + 1
+            if st.session_state.treinos_25[i]:
+                st.markdown(f"✅ Treino Dia {dia}")
+            elif dia == proximo:
+                if st.button(f"🚀 Iniciar Treino Dia {dia}"):
+                    st.session_state.dia_atual = dia
+                    st.session_state.origem = "todo_treino_25.py"
+                    st.switch_page("pages/treino_dia.py")
+            else:
+                st.markdown(f"🔒 Treino Dia {dia}")
+
+        st.progress(sum(st.session_state.treinos_25) / TOTAL_DIAS)
+
+    elif dados["Dias de treino"] == "30":
+        TOTAL_DIAS = 30
+        st.set_page_config(page_title="Treino 30 Dias")
+        st.title(f"🏃 Plano de Treino - {TOTAL_DIAS} Dias")
+
+        if "treinos_30" not in st.session_state or len(st.session_state.treinos_30) != TOTAL_DIAS:
+            st.session_state.treinos_30 = [False] * TOTAL_DIAS
+
+        proximo = None
+        for i, feito in enumerate(st.session_state.treinos_30):
+            if not feito:
+                proximo = i + 1
+                break
+
+        st.subheader("📋 Lista de Treinos")
+        for i in range(TOTAL_DIAS):
+            dia = i + 1
+            if st.session_state.treinos_30[i]:
+                st.markdown(f"✅ Treino Dia {dia}")
+            elif dia == proximo:
+                if st.button(f"🚀 Iniciar Treino Dia {dia}"):
+                    st.session_state.dia_atual = dia
+                    st.session_state.origem = "todo_treino_30.py"
+                    st.switch_page("pages/treino_dia.py")
+            else:
+                st.markdown(f"🔒 Treino Dia {dia}")
+
+        st.progress(sum(st.session_state.treinos_30) / TOTAL_DIAS)
+
+
+if st.button("Recomendação Inteligente"):
+    st.info("Gerando plano personalizado com IA...")
+    plano = gerar_treino_personalizado(dados)
+    caminho_pdf = gerar_pdf(plano)
+    st.success("Plano gerado com sucesso!")
+
+    with open(caminho_pdf, "rb") as file:
+        st.download_button("📥 Baixar Plano de Treino", file,
+                           file_name="treino_personalizado.pdf")

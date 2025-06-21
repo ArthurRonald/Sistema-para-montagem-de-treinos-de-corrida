@@ -43,7 +43,24 @@ objetivo = st.selectbox(
     )
 )
 
+tempo1 = st.number_input(
+    "Quanto tempo por dia você tem disponível para fazer seus treinos? ", min_value=0, max_value=180, step=5,
+    value=st.session_state.get("dados_usuario", {}).get("Tempo disponivel", 0)
+)
 
+distancia1 = st.number_input(
+    "Qual a distância máxima que você quer correr", min_value=0.0, max_value=50.0, step=0.5,
+    value=st.session_state.get("dados_usuario", {}).get(
+        "Distância desejada ", 0.0)
+)
+
+dias = st.selectbox(
+    "Escolha a quantidade de dias que você deseja dividir seu treino",
+    ["", "10", "15", "20", "25", "30"],
+    index=["", "10", "15", "20", "25", "30"].index(
+        st.session_state.get("dados_usuario", {}).get("dias", "")
+    )
+)
 st.text("")
 
 st.markdown("Para entendermos melhor o seu nível atual como corredor, "
@@ -119,6 +136,9 @@ if st.button("🚀 Salvar dados"):
             "lesao_encoded": str(historico_lesao),
             "Atividades/semana": int(atividades_semana),
             "objetivo_encoded": str(objetivo),
+            "Tempo disponivel": int(tempo1),
+            "Distância desejada": float(distancia1), 
+            "Dias de Treino": int(dias)
         }
 
         st.session_state["dados_usuario"] = dados
