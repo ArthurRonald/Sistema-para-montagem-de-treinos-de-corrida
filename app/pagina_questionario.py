@@ -154,4 +154,4 @@ if st.button("🚀 Salvar dados"):
 
 if st.session_state["dados_gerados"]:
     if st.button("Verifique seu Treino"):
-        st.switch_page("pagina_toDoList.py")
+        st.switch_page("ia_recomendacao.py")
