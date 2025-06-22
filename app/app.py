@@ -2,7 +2,7 @@ import streamlit as st
 import pagina_inicial
 import pagina_perfil
 import pagina_questionario
-import ia_recomendacao
+import pagina_toDoList
 
 
 paginas = {"Sobre o Site": [
