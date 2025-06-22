@@ -40,17 +40,6 @@ def gerar_treino_personalizado(entrada_ia, nivel_texto):
         st.error(f"Erro ao gerar o treino: {e}")
         return "❌ Não foi possível gerar o treino no momento."
 
-#Se o usuário solicitou um treino com IA a partir do questionário, gera automaticamente o plano com base nos dados salvos
-if st.session_state.get("solicitar_treino", False):
-    dados = st.session_state.get("dados_usuario", {})
-    
-    if dados:
-        plano_gerado = gerar_treino_personalizado(dados, dados.get("nivel", ""))
-        st.markdown("### 🏃 Seu Plano de Treino Personalizado")
-        st.markdown(plano_gerado)
-        st.session_state["solicitar_treino"] = False
-    else:
-        st.warning("Dados do usuário não encontrados. Volte ao questionário.")
 
 def gerar_pdf(nome, treino_texto):
     pdf = FPDF()
@@ -100,7 +89,7 @@ if all(campo in dados_usuario for campo in campos_necessarios):
     "objetivo": st.session_state["dados_usuario"]["objetivo_encoded"],
     "tempo_disponivel_minutos": st.session_state["dados_usuario"]["Tempo disponivel"],
     "distancia_desejada": st.session_state["dados_usuario"]["Distância desejada"],
-    "dias_de_treino": st.session_state["dados_usuario"]["Dias de Treino"]
+    "dias_de_treino": st.session_state["dados_usuario"]["Dias de treino"]
 }
 
     if st.button("🚀 Gerar Treino"):
