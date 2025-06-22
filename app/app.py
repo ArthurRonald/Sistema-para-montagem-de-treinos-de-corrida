@@ -5,13 +5,12 @@ import pagina_questionario
 import ia_recomendacao
 
 
-
 paginas = {"Sobre o Site": [
     st.Page("pagina_inicial.py", title="Inicio", default=True)],
     "Você": [
         st.Page("pagina_perfil.py", title="Perfil"),
         st.Page("pagina_questionario.py", title="Questionário"),
-        st.Page("ia_recomendacao.py", title="Check-List"),
+        st.Page("pagina_toDoList.py", title="Check-List"),
         st.Page("pagina_questionario2.py", title="Avaliação do Treino")
 ],
     "  ": [st.Page("pagina_final.py", title="FIM")]
