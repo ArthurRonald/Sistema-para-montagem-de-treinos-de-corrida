@@ -174,9 +174,6 @@ if st.button("🚀 Salvar dados"):
 
 if st.session_state["dados_gerados"]:
     if st.button("Verifique seu Treino"):
+        st.session_state["auto_gerar_pdf"] = True
         st.switch_page("pagina_toDoList.py")
 
-#botão para gerar o treino, e redirecionar para a toDoList
-if st.button("📡 Gerar treino com IA"):
-    st.session_state["solicitar_treino"] = True
-    st.switch_page("app/pagina_toDoList.py")

@@ -4,7 +4,7 @@ from fpdf import FPDF
 
 
 API_KEY = "AIzaSyBUb0tOQMD1mrcAu5DCtaAMEU_zer7nxwE"  
-genai.configure(api_key=API_KEY)
+genai.configure(api_key=API_KEY) #metodo do gemini pra configurar. tem como parametro o api key igualando a alguma variavel.
 
 # funcao pra pedir o treino pra o gemini
 def gerar_treino_personalizado(entrada_ia, nivel_texto):
@@ -92,7 +92,7 @@ if all(campo in dados_usuario for campo in campos_necessarios):
     "dias_de_treino": st.session_state["dados_usuario"]["Dias de treino"]
 }
 
-    if st.button("🚀 Gerar Treino"):
+    if st.session_state.get("auto_gerar_pdf"):
         treino_texto = gerar_treino_personalizado(entrada_ia, nivel_texto)
 
         if treino_texto:
