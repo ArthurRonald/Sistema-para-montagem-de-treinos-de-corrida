@@ -21,14 +21,14 @@ def gerar_treino_personalizado(entrada_ia, nivel_texto):
     - Distância média por treino: {entrada_ia['distancia_media_treino']} km
     - Pace médio: {entrada_ia['pace']} min/km
     - Histórico de lesão: {entrada_ia['lesao']}
-    - Dias disponíveis por semana: {entrada_ia['dias_por_semana']}
+    - Dias que pratica atividade física: {entrada_ia['dias_por_semana']}
     - Objetivo: {entrada_ia['objetivo']}
     - Tempo disponível por dia: {entrada_ia['tempo_disponivel_minutos']} minutos
     - Distância alvo: {entrada_ia['distancia_desejada']} km
     - Dias totais de treino: {entrada_ia['dias_de_treino']} dias
 
     Deixe todo treino organizado de maneira justificada. Liste todas as variáveis na introdução do treino.  Nível, peso, altura, tempo medio, tudo... Divida o plano por dia, seja específico com os tipos de treino (ex: Trote leve 30min, Intervalado, Longão).
-    Não use academia nem equipamentos avançados. Acentue corretamente as palavras, mas não use caracteres como asteriscos e traços (hifens), exceto acentos graficos de pontuaçao (não precisa dizer na resposta que não vai usar esses caracteres.)
+    Não use academia nem equipamentos avançados. Não use negrito em nenhuma palavra. Acentue corretamente as palavras, mas não use caracteres como asteriscos e traços (hifens), exceto acentos graficos de pontuaçao (não precisa dizer na resposta que não vai usar esses caracteres.)
     """
 
     model = genai.GenerativeModel('gemini-2.5-flash')
@@ -54,7 +54,7 @@ def gerar_pdf(nome, treino_texto):
     return pdf.output(dest='S').encode('latin-1')  #retorna o download do pdf
 
 
-st.title("🏃 Treino Personalizado")
+titulo = st.title("🏃 Treino Personalizado")
 
 #ia de previsao numerica
 previsao_numerica = st.session_state.get("previsao")
@@ -93,21 +93,24 @@ if all(campo in dados_usuario for campo in campos_necessarios):
 }
 
     if st.session_state.get("auto_gerar_pdf"):
-        treino_texto = gerar_treino_personalizado(entrada_ia, nivel_texto)
-
+        
+        with st.spinner("Criação do treino em progresso. Aguarde alguns instantes..."):
+            treino_texto = gerar_treino_personalizado(entrada_ia, nivel_texto)
+        
         if treino_texto:
-            st.markdown("### ✅ Plano de Treino Gerado pela IA:")
-            st.text_area("📋 Treino:", treino_texto, height=400)
+            st.markdown("### ✅ Plano de treino gerado com sucesso!:")
+            
 
             #botao de download do pdf
             pdf_bytes = gerar_pdf(dados_usuario.get("Nome", "Usuário"), treino_texto)
 
-            st.download_button(
+            botao_download= st.download_button(
                 label="📥 Baixar Treino em PDF",
                 data=pdf_bytes,
                 file_name="treino_personalizado.pdf",
                 mime="application/pdf"
             )
-
+            st.session_state["auto_gerar_pdf"] = False #Pra nao gerar infinitamente
+            
 else:
-    st.warning("⚠️ Dados incompletos. Volte e preencha o questionário primeiro.")
+    st.warning("⚠️ Dados não encontrados. Será que você preencheu o formulário?")
