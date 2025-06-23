@@ -11,7 +11,7 @@ paginas = {"Sobre o Site": [
         st.Page("pagina_perfil.py", title="Perfil"),
         st.Page("pagina_questionario.py", title="Questionário"),
         st.Page("pagina_toDoList.py", title="Check-List"),
-        st.Page("pagina_questionario2.py", title="Avaliação do Treino")
+
 ],
     "  ": [st.Page("pagina_final.py", title="FIM")]
 }

@@ -35,6 +35,43 @@ historico_lesao = st.radio(
 )
 
 
+tempo1 = st.number_input(
+    "Quanto tempo por dia você tem disponível para fazer seus treinos? (em min)", min_value=0, max_value=180, step=5,
+    value=st.session_state.get("dados_usuario", {}).get("Tempo disponivel", 0)
+)
+
+distancia1 = st.number_input(
+    "Qual a distância máxima que você quer correr (em km)", min_value=0.0, max_value=50.0, step=0.5,
+    value=st.session_state.get("dados_usuario", {}).get(
+        "Distância desejada", 0.0)
+)
+
+dias = st.selectbox(
+    "Escolha a quantidade de dias que você deseja dividir seu treino",
+    ["", 10, 15, 20, 25, 30],
+    index=["", 10, 15, 20, 25, 30].index(
+        st.session_state.get("dados_usuario", {}).get("Dias de treino", "")
+    )
+)
+st.text("")
+
+st.markdown(
+    "Para avaliarmos seu nível atual como corredor, preencha os dados abaixo com base nos seus treinos anteriores:\n\n"
+
+    "- 🕒 **Tempo médio por treino** (minutos)\n"
+    "- 📏 **Distância média** (quilômetros)\n"
+    "- 🏃 **Pace médio** (min/km)\n"
+    "- 📅 **Dias de atividade por semana**\n\n"
+
+    "Essas informações serão analisadas por uma **IA do sistema**, que usará seus dados para estimar seu nível e criar um plano de treino personalizado.\n\n"
+
+    "🔎 **É importante que as respostas sejam as mais fiéis e próximas da realidade possível**, para garantir um plano adequado ao seu condicionamento.\n\n"
+
+    "**Se nunca treinou anteriormente, digite 0 nos campos.**"
+)
+
+st.text("")
+
 objetivo = st.selectbox(
     " Objetivo do treino",
     ["", "Maratona", "Bem-estar", "Emagrecimento"],
@@ -42,34 +79,6 @@ objetivo = st.selectbox(
         st.session_state.get("dados_usuario", {}).get("objetivo_encoded", "")
     )
 )
-
-tempo1 = st.number_input(
-    "Quanto tempo por dia você tem disponível para fazer seus treinos? ", min_value=0, max_value=180, step=5,
-    value=st.session_state.get("dados_usuario", {}).get("Tempo disponivel", 0)
-)
-
-distancia1 = st.number_input(
-    "Qual a distância máxima que você quer correr", min_value=0.0, max_value=50.0, step=0.5,
-    value=st.session_state.get("dados_usuario", {}).get(
-        "Distância desejada ", 0.0)
-)
-
-dias = st.selectbox(
-    "Escolha a quantidade de dias que você deseja dividir seu treino",
-    ["", "10", "15", "20", "25", "30"],
-    index=["", "10", "15", "20", "25", "30"].index(
-        st.session_state.get("dados_usuario", {}).get("dias", "")
-    )
-)
-st.text("")
-
-st.markdown("Para entendermos melhor o seu nível atual como corredor, "
-            "responda às perguntas abaixo com base nos seus treinos anteriores.\n\n"
-
-            "Indique o tempo médio e a distância média que costuma correr por treino e o seu pace médio "
-            "(ritmo, em minutos por quilômetro). **Caso nunca tenha treinado antes, digite 0 nos campos.**")
-
-st.text("")
 
 tempo = st.number_input(
     "⏱ Qual sua média de tempo por treino em minutos?", min_value=0, max_value=180, step=5,
@@ -176,4 +185,3 @@ if st.session_state["dados_gerados"]:
     if st.button("Verifique seu Treino"):
         st.session_state["auto_gerar_pdf"] = True
         st.switch_page("pagina_toDoList.py")
-

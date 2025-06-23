@@ -3,10 +3,13 @@ import google.generativeai as genai
 from fpdf import FPDF
 
 
-API_KEY = "AIzaSyBUb0tOQMD1mrcAu5DCtaAMEU_zer7nxwE"  
-genai.configure(api_key=API_KEY) #metodo do gemini pra configurar. tem como parametro o api key igualando a alguma variavel.
+API_KEY = "AIzaSyBUb0tOQMD1mrcAu5DCtaAMEU_zer7nxwE"
+# metodo do gemini pra configurar. tem como parametro o api key igualando a alguma variavel.
+genai.configure(api_key=API_KEY)
 
 # funcao pra pedir o treino pra o gemini
+
+
 def gerar_treino_personalizado(entrada_ia, nivel_texto):
     prompt = f"""
     Você é um treinador especialista em corrida.
@@ -45,18 +48,19 @@ def gerar_pdf(nome, treino_texto):
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", "B", 16)
-    pdf.cell(0, 10, f"Plano de Treino Personalizado para {nome}", ln=True, align='C')
-    
+    pdf.cell(
+        0, 10, f"Plano de Treino Personalizado para {nome}", ln=True, align='C')
+
     pdf.set_font("Arial", "", 12)
     for linha in treino_texto.split('\n'):
         pdf.multi_cell(0, 10, linha)
 
-    return pdf.output(dest='S').encode('latin-1')  #retorna o download do pdf
+    return pdf.output(dest='S').encode('latin-1')  # retorna o download do pdf
 
 
 titulo = st.title("🏃 Treino Personalizado")
 
-#ia de previsao numerica
+# ia de previsao numerica
 previsao_numerica = st.session_state.get("previsao")
 nivel_texto = ""
 
@@ -71,46 +75,143 @@ else:
 
 dados_usuario = st.session_state.get("dados_usuario", {})
 
-#conferir dados
-campos_necessarios = ["objetivo_encoded", "Distância (km)", "Atividades/semana", "Tempo (min)", "lesao_encoded"]
+# conferir dados
+campos_necessarios = ["objetivo_encoded",
+                      "Distância (km)", "Atividades/semana", "Tempo (min)", "lesao_encoded"]
 if all(campo in dados_usuario for campo in campos_necessarios):
 
-    #dados pro prompt
+    # dados pro prompt
     entrada_ia = {
-    "nivel": nivel_texto,
-    "nome": st.session_state["dados_usuario"]["Nome"],
-    "peso": st.session_state["dados_usuario"]["Peso (kg)"],
-    "altura": st.session_state["dados_usuario"]["Altura (cm)"],
-    "tempo_medio_treino": st.session_state["dados_usuario"]["Tempo (min)"],
-    "distancia_media_treino": st.session_state["dados_usuario"]["Distância (km)"],
-    "pace": st.session_state["dados_usuario"]["Pace (min/km)"],
-    "lesao": st.session_state["dados_usuario"]["lesao_encoded"],
-    "dias_por_semana": st.session_state["dados_usuario"]["Atividades/semana"],
-    "objetivo": st.session_state["dados_usuario"]["objetivo_encoded"],
-    "tempo_disponivel_minutos": st.session_state["dados_usuario"]["Tempo disponivel"],
-    "distancia_desejada": st.session_state["dados_usuario"]["Distância desejada"],
-    "dias_de_treino": st.session_state["dados_usuario"]["Dias de treino"]
-}
+        "nivel": nivel_texto,
+        "nome": st.session_state["dados_usuario"]["Nome"],
+        "peso": st.session_state["dados_usuario"]["Peso (kg)"],
+        "altura": st.session_state["dados_usuario"]["Altura (cm)"],
+        "tempo_medio_treino": st.session_state["dados_usuario"]["Tempo (min)"],
+        "distancia_media_treino": st.session_state["dados_usuario"]["Distância (km)"],
+        "pace": st.session_state["dados_usuario"]["Pace (min/km)"],
+        "lesao": st.session_state["dados_usuario"]["lesao_encoded"],
+        "dias_por_semana": st.session_state["dados_usuario"]["Atividades/semana"],
+        "objetivo": st.session_state["dados_usuario"]["objetivo_encoded"],
+        "tempo_disponivel_minutos": st.session_state["dados_usuario"]["Tempo disponivel"],
+        "distancia_desejada": st.session_state["dados_usuario"]["Distância desejada"],
+        "dias_de_treino": st.session_state["dados_usuario"]["Dias de treino"]
+    }
 
     if st.session_state.get("auto_gerar_pdf"):
-        
+
         with st.spinner("Criação do treino em progresso. Aguarde alguns instantes..."):
             treino_texto = gerar_treino_personalizado(entrada_ia, nivel_texto)
-        
+
         if treino_texto:
             st.markdown("### ✅ Plano de treino gerado com sucesso!:")
-            
 
-            #botao de download do pdf
-            pdf_bytes = gerar_pdf(dados_usuario.get("Nome", "Usuário"), treino_texto)
+            # botao de download do pdf
+            pdf_bytes = gerar_pdf(dados_usuario.get(
+                "Nome", "Usuário"), treino_texto)
 
-            botao_download= st.download_button(
+            botao_download = st.download_button(
                 label="📥 Baixar Treino em PDF",
                 data=pdf_bytes,
                 file_name="treino_personalizado.pdf",
                 mime="application/pdf"
             )
-            st.session_state["auto_gerar_pdf"] = False #Pra nao gerar infinitamente
-            
+            # Pra nao gerar infinitamente
+            st.session_state["auto_gerar_pdf"] = False
+
 else:
     st.warning("⚠️ Dados não encontrados. Será que você preencheu o formulário?")
+
+
+# if "dados_usuario" in st.session_state:
+
+#     dados = st.session_state["dados_usuario"]
+
+#     TOTAL_DIAS = dados["Dias de treino"]
+#     st.title(f"🏃 Plano de Treino - {TOTAL_DIAS} Dias")
+
+#     if "treinos" not in st.session_state or len(st.session_state.treinos) != TOTAL_DIAS:
+#         st.session_state.treinos = [False] * TOTAL_DIAS
+
+#     proximo = None
+#     for i, feito in enumerate(st.session_state.treinos):
+#         if not feito:
+#             proximo = i + 1
+#             break
+
+#     st.subheader("📋 Lista de Treinos")
+
+#     if "dia_atual" not in st.session_state or "origem" not in st.session_state:
+#         st.error("Treino não selecionado.")
+#         st.stop()
+
+#     dia = st.session_state.dia_atual
+#     origem = st.session_state.origem
+#     treino_key = "treinos_" + origem.split("_")[-1].replace(".py", "")
+
+#     for i in range(TOTAL_DIAS):
+#         dia = i + 1
+#         if st.session_state.treinos[i]:
+#             st.markdown(f"✅ Treino Dia {dia}")
+#         elif dia == proximo:
+#             if st.button(f"🚀 Concluir Treino Dia {dia}"):
+#                 st.session_state.dia_atual = dia
+#                 st.session_state.origem = "pagina_toDoList.py"
+#                 st.session_state[treino_key][dia - 1] = True
+#                 st.success("Treino concluído!")
+
+#         else:
+#             st.markdown(f"🔒 Treino Dia {dia}")
+
+#     st.progress(sum(st.session_state.treinos) / TOTAL_DIAS)
+
+
+# Verifica se os dados do usuário estão salvos
+if "dados_usuario" in st.session_state:
+    dados = st.session_state["dados_usuario"]
+    TOTAL_DIAS = dados["Dias de treino"]
+
+    st.title(f"🏃 Plano de Treino - {TOTAL_DIAS} Dias")
+    st.subheader("📋 Lista de Treinos")
+
+    # Inicializa lista de treinos se ainda não existir
+    if "treinos" not in st.session_state or len(st.session_state.treinos) != TOTAL_DIAS:
+        st.session_state.treinos = [False] * TOTAL_DIAS
+
+    # Inicializa controle da mensagem de sucesso
+    if "ultimo_concluido" not in st.session_state:
+        st.session_state.ultimo_concluido = None
+
+    # Determina qual é o próximo treino não concluído
+    proximo = None
+    for i, feito in enumerate(st.session_state.treinos):
+        if not feito:
+            proximo = i
+            break
+
+    for i in range(TOTAL_DIAS):
+        dia = i + 1
+
+        if st.session_state.treinos[i]:
+            st.markdown(f"✅ Treino Dia {dia}")
+        elif i == proximo:
+            # Mostrar mensagem de sucesso se o último treino foi esse e ainda não clicou no próximo
+            if st.session_state.ultimo_concluido == dia:
+                st.success(f"✅ Treino do Dia concluído com sucesso!")
+
+            # Mostra botão de conclusão
+            if st.button(f"✅ Concluir Treino Dia {dia}"):
+                st.session_state.treinos[i] = True
+                # Marca o próximo dia como a próxima meta
+                st.session_state.ultimo_concluido = dia + 1
+                st.rerun()
+        else:
+            st.markdown(f"🔒 Treino Dia {dia}")
+
+    # Barra de progresso
+    progresso = sum(st.session_state.treinos) / TOTAL_DIAS
+    st.progress(progresso)
+
+    # Mensagem final ao concluir todos os treinos
+    if progresso == 1.0:
+        st.success(
+            f"🎉 Parabéns, você concluiu todos os seus treinos para alcançar seu objetivo de {dados["Distância desejada"]}Km!")
