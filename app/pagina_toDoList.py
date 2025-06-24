@@ -226,3 +226,5 @@ if "dados_usuario" in st.session_state:
     if progresso == 1.0:
         st.success(
             f"🎉 Parabéns, você concluiu todos os seus treinos para alcançar seu objetivo de {dados["Distância desejada"]}Km!")
+        if st.button("Avalie o seu plano! 💬"):
+            st.switch_page("pagina_final.py")
