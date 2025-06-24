@@ -21,9 +21,9 @@ st.markdown("""
 
 **-PDF com seu plano:** Se quiser, você pode salvar ou imprimir seu plano para acompanhar quando estiver offline. 
 
-**-Uma inteligência artificial própria: Criamos um modelo de IA capaz de dizer o nível de atividade que você pode praticar!
+**-Uma inteligência artificial própria:** Criamos um modelo de IA capaz de dizer o nível de atividade que você pode praticar!
 
-**-Consulta com o Gemini: oferecendo uma precisão melhor, utilizamos as tecnologias disponibilizadas pelo gemini!
+**-Consulta com o Gemini:** oferecendo uma precisão melhor, utilizamos as tecnologias disponibilizadas pelo gemini!
 """)
 
 

@@ -57,7 +57,9 @@ def gerar_pdf(nome, treino_texto):
 
     return pdf.output(dest='S').encode('latin-1')  # retorna o download do pdf
 
-def limpar_texto_pdf(treino_texto): #funcao pra nao quebrar se vier emoji ou outro unicode
+
+# funcao pra nao quebrar se vier emoji ou outro unicode
+def limpar_texto_pdf(treino_texto):
     return treino_texto.encode('latin-1', errors='ignore').decode('latin-1')
 
 
@@ -77,8 +79,6 @@ else:
     st.error("Nível não reconhecido. Por favor, refaça o questionário.")
 
 dados_usuario = st.session_state.get("dados_usuario", {})
-
-
 
 
 # conferir dados
@@ -104,79 +104,37 @@ if all(campo in dados_usuario for campo in campos_necessarios):
     }
 
     if st.session_state.get("auto_gerar_pdf"):
-        
-        if "Treino ia" not in st.session_state: #so gera o pdf se for a primeira vez
-            
+
+        if "Treino ia" not in st.session_state:  # so gera o pdf se for a primeira vez
+
             with st.spinner("Criação do treino em progresso. Aguarde alguns instantes..."):
-                treino_texto = gerar_treino_personalizado(entrada_ia, nivel_texto)
-                treino_texto_limpo = limpar_texto_pdf(treino_texto) #chama a funcao pra nao quebrar
-                st.session_state["Treino ia"]= treino_texto_limpo
-        
-        st.session_state["auto_gerar_pdf"] = False # Pra nao gerar infinitamente
-    
+                treino_texto = gerar_treino_personalizado(
+                    entrada_ia, nivel_texto)
+                treino_texto_limpo = limpar_texto_pdf(
+                    treino_texto)  # chama a funcao pra nao quebrar
+                st.session_state["Treino ia"] = treino_texto_limpo
+
+        # Pra nao gerar infinitamente
+        st.session_state["auto_gerar_pdf"] = False
+
     if "Treino ia" in st.session_state:
-            
-            treino_texto_limpo = st.session_state["Treino ia"]
-                
-            
-            # botao de download do pdf
-            pdf_bytes = gerar_pdf(dados_usuario.get(
-                    "Nome", "Usuário"), treino_texto_limpo)
-            st.markdown("### ✅ Plano de treino gerado com sucesso!:")
-            botao_download = st.download_button(
-                    label="📥 Baixar Treino em PDF",
-                    data=pdf_bytes,
-                    file_name="treino_personalizado.pdf",
-                    mime="application/pdf"
-                )
-            
-                
+
+        treino_texto_limpo = st.session_state["Treino ia"]
+
+        # botao de download do pdf
+        pdf_bytes = gerar_pdf(dados_usuario.get(
+            "Nome", "Usuário"), treino_texto_limpo)
+        st.subheader(f"✅ Plano de treino gerado com sucesso! Seu nível ideal para sua atividade é **{nivel_texto}**")
+        botao_download = st.download_button(
+            label="📥 Baixar Treino em PDF",
+            data=pdf_bytes,
+            file_name="treino_personalizado.pdf",
+            mime="application/pdf"
+        )
+
 
 else:
     st.warning("⚠️ Dados não encontrados. Será que você preencheu o formulário?")
-
-
-# if "dados_usuario" in st.session_state:
-
-#     dados = st.session_state["dados_usuario"]
-
-#     TOTAL_DIAS = dados["Dias de treino"]
-#     st.title(f"🏃 Plano de Treino - {TOTAL_DIAS} Dias")
-
-#     if "treinos" not in st.session_state or len(st.session_state.treinos) != TOTAL_DIAS:
-#         st.session_state.treinos = [False] * TOTAL_DIAS
-
-#     proximo = None
-#     for i, feito in enumerate(st.session_state.treinos):
-#         if not feito:
-#             proximo = i + 1
-#             break
-
-#     st.subheader("📋 Lista de Treinos")
-
-#     if "dia_atual" not in st.session_state or "origem" not in st.session_state:
-#         st.error("Treino não selecionado.")
-#         st.stop()
-
-#     dia = st.session_state.dia_atual
-#     origem = st.session_state.origem
-#     treino_key = "treinos_" + origem.split("_")[-1].replace(".py", "")
-
-#     for i in range(TOTAL_DIAS):
-#         dia = i + 1
-#         if st.session_state.treinos[i]:
-#             st.markdown(f"✅ Treino Dia {dia}")
-#         elif dia == proximo:
-#             if st.button(f"🚀 Concluir Treino Dia {dia}"):
-#                 st.session_state.dia_atual = dia
-#                 st.session_state.origem = "pagina_toDoList.py"
-#                 st.session_state[treino_key][dia - 1] = True
-#                 st.success("Treino concluído!")
-
-#         else:
-#             st.markdown(f"🔒 Treino Dia {dia}")
-
-#     st.progress(sum(st.session_state.treinos) / TOTAL_DIAS)
 
 
 # Verifica se os dados do usuário estão salvos
@@ -184,8 +142,7 @@ if "dados_usuario" in st.session_state:
     dados = st.session_state["dados_usuario"]
     TOTAL_DIAS = dados["Dias de treino"]
 
-    st.title(f"🏃 Plano de Treino - {TOTAL_DIAS} Dias")
-    st.subheader("📋 Lista de Treinos")
+    st.subheader(f"🏃 Lista de Treino - {TOTAL_DIAS} Dias")
 
     # Inicializa lista de treinos se ainda não existir
     if "treinos" not in st.session_state or len(st.session_state.treinos) != TOTAL_DIAS:

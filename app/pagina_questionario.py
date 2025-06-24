@@ -48,8 +48,8 @@ distancia1 = st.number_input(
 
 dias = st.selectbox(
     "Escolha a quantidade de dias que você deseja dividir seu treino",
-    ["", 10, 15, 20, 25, 30],
-    index=["", 10, 15, 20, 25, 30].index(
+    ["", 5, 7, 10, 15, 20, 25, 30],
+    index=["", 5, 7, 10, 15, 20, 25, 30].index(
         st.session_state.get("dados_usuario", {}).get("Dias de treino", "")
     )
 )
@@ -60,7 +60,7 @@ st.markdown(
 
     "- 🕒 **Tempo médio por treino** (minutos)\n"
     "- 📏 **Distância média** (quilômetros)\n"
-    "- 🏃 **Pace médio** (min/km)\n"
+    "- 🏃 **Pace médio** (min/km) — ritmo de corrida, ou seja, quantos minutos você leva para correr 1 km\n"
     "- 📅 **Dias de atividade por semana**\n\n"
 
     "Essas informações serão analisadas por uma **IA do sistema**, que usará seus dados para estimar seu nível e criar um plano de treino personalizado.\n\n"
@@ -184,4 +184,4 @@ if st.button("🚀 Salvar dados"):
 if st.session_state["dados_gerados"]:
     if st.button("Verifique seu Treino"):
         st.session_state["auto_gerar_pdf"] = True
-        st.switch_page("pagina_toDoList.py")
+        st.switch_page("pagina_treino.py")
