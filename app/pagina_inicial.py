@@ -15,9 +15,9 @@ st.markdown("""
 
 **-Sem necessidade de baixar nada:** Tudo acontece na própria página, de forma prática e leve.
 
-**-Possibilidade de dar feedback:** Depois de seguir os treinos, você pode contar como foi e receber um novo plano ajustado conforme o seu progresso ou suas dificuldades.
+**-Sugestão com o feedback de seu treino:** Depois de seguir os treinos, você pode contar como foi e receber um novo plano ajustado conforme o seu progresso ou suas dificuldades.
 
-**-Lista de metas para te ajudar a se organizar:** O sistema também exibe os treinos da semana de forma simples, como uma lista que você pode acompanhar dia a dia.
+**-Organização em lista de seu treino:** O sistema também exibe os treinos da semana de forma simples, como uma lista que você pode acompanhar dia a dia.
 
 **-PDF com seu plano:** Se quiser, você pode salvar ou imprimir seu plano para acompanhar quando estiver offline. """)
 
