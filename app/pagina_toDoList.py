@@ -78,6 +78,9 @@ else:
 
 dados_usuario = st.session_state.get("dados_usuario", {})
 
+
+st.subheader(f"Vimos aqui que o nível ideal para sua atividade é **{nivel_texto}**)
+
 # conferir dados
 campos_necessarios = ["objetivo_encoded",
                       "Distância (km)", "Atividades/semana", "Tempo (min)", "lesao_encoded"]
