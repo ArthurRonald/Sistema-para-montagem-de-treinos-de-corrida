@@ -78,6 +78,9 @@ else:
 
 dados_usuario = st.session_state.get("dados_usuario", {})
 
+
+
+
 # conferir dados
 campos_necessarios = ["objetivo_encoded",
                       "Distância (km)", "Atividades/semana", "Tempo (min)", "lesao_encoded"]
