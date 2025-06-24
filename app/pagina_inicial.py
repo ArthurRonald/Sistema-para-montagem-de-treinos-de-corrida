@@ -19,7 +19,13 @@ st.markdown("""
 
 **-Organização em lista de seu treino:** O sistema também exibe os treinos da semana de forma simples, como uma lista que você pode acompanhar dia a dia.
 
-**-PDF com seu plano:** Se quiser, você pode salvar ou imprimir seu plano para acompanhar quando estiver offline. """)
+**-PDF com seu plano:** Se quiser, você pode salvar ou imprimir seu plano para acompanhar quando estiver offline. 
+
+**-Uma inteligência artificial própria: Criamos um modelo de IA capaz de dizer o nível de atividade que você pode praticar!
+
+**-Consulta com o Gemini: oferecendo uma precisão melhor, utilizamos as tecnologias disponibilizadas pelo gemini!
+""")
+
 
 st.subheader("Vamos Começar❔🏃‍♂️")
 
