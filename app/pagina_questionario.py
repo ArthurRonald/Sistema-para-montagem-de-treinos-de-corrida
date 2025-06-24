@@ -118,7 +118,7 @@ if "dados_gerados" not in st.session_state:
     st.session_state["dados_gerados"] = False
 
 if st.button("🚀 Salvar dados"):
-
+    
     nome_limpo = nome.strip()
 
     if not nome_limpo:
@@ -130,58 +130,95 @@ if st.button("🚀 Salvar dados"):
     if objetivo == "":
         erros.append("❌ Selecione um objetivo de treino.")
 
+
+    # ... (código anterior permanece igual até a parte do botão "Salvar dados")
+
+if st.button("🚀 Salvar dados"):
+
+    nome_limpo = nome.strip()
+
+    if not nome_limpo:
+        erros.append("❌ Informe seu Nome.")
+    elif not all(palavra.isalpha() for palavra in nome_limpo.split()):
+        erros.append(
+            "❌ O nome deve conter apenas letras e espaços. Números ou símbolos não são permitidos.")
+
+    if objetivo == "":
+        erros.append("❌ Selecione um objetivo de treino.")
+        
+    if tempo1 <= 0:
+        erros.append("❌ O tempo de atividade tem que ser maior que zero.")
+    elif tempo1 < 20:
+        erros.append("❌ O tempo mínimo recomendado para treino é de 20 minutos.")
+        
+    if distancia1 <= 0:
+        erros.append("❌ A distância desejada deve ser maior que 0 km.")
+    elif distancia1 > 42.2 and objetivo == "Maratona":
+        erros.append("❌ A distância máxima para uma maratona é 42.2 km.")
+        
+    if dias == "":
+        erros.append("❌ Selecione a quantidade de dias para dividir seu treino.")
+    elif dias <= 0:
+        erros.append("❌ O número de dias de treino deve ser maior que 0.")
+    elif dias > 30:
+        erros.append("❌ O número máximo de dias de treino é 30.")
+
     if erros:
         for erro in erros:
             st.error(erro)
-    else:
-
-        dados = {
-            "Nome": str(nome_limpo),
-            "Peso (kg)": float(peso),
-            "Altura (cm)": float(altura),
-            "Tempo (min)": int(tempo),
-            "Distância (km)": float(distancia),
-            "Pace (min/km)": float(pace),
-            "lesao_encoded": str(historico_lesao),
-            "Atividades/semana": int(atividades_semana),
-            "objetivo_encoded": str(objetivo),
-            "Tempo disponivel": int(tempo1),
-            "Distância desejada": float(distancia1),
-            "Dias de treino": int(dias)
-        }
-
-        st.session_state["dados_usuario"] = dados
-        st.session_state["dados_gerados"] = True
-        st.success("✅ Dados coletados com sucesso!")
-
-    if st.session_state.get("dados_gerados", False):
-        try:
-            dados_modelo = {
+    else:    
+        if erros:
+            for erro in erros:
+                st.error(erro)
+        else:
+    
+            dados = {
+                "Nome": str(nome_limpo),
+                "Peso (kg)": float(peso),
+                "Altura (cm)": float(altura),
                 "Tempo (min)": int(tempo),
                 "Distância (km)": float(distancia),
-                # Sim=1, Não=0
-                "lesao_encoded": encoder2.transform([historico_lesao])[0],
                 "Pace (min/km)": float(pace),
+                "lesao_encoded": str(historico_lesao),
                 "Atividades/semana": int(atividades_semana),
-                # Bem-estar=0, Emagrecimento=1, Maratona=2
-                "objetivo_encoded": encoder1.transform([objetivo])[0],
+                "objetivo_encoded": str(objetivo),
+                "Tempo disponivel": int(tempo1),
+                "Distância desejada": float(distancia1),
+                "Dias de treino": int(dias)
             }
-            previsao = modelo.predict(pd.DataFrame([dados_modelo]))[0]
-
-            st.session_state["previsao"] = {
-                0: "avancado",
-                1: "iniciante",
-                2: "intermediario"
-            }[previsao]
-
-            st.session_state["previsao"] = previsao
-            st.session_state["historico_lesao"] = historico_lesao
-
-        except Exception as e:
-            st.error("Erro ao processar. Verifique os dados e tente novamente.")
-
-
-if st.session_state["dados_gerados"]:
-    if st.button("Verifique seu Treino"):
-        st.session_state["auto_gerar_pdf"] = True
-        st.switch_page("pagina_treino.py")
+    
+            st.session_state["dados_usuario"] = dados
+            st.session_state["dados_gerados"] = True
+            st.success("✅ Dados coletados com sucesso!")
+    
+        if st.session_state.get("dados_gerados", False):
+            try:
+                dados_modelo = {
+                    "Tempo (min)": int(tempo),
+                    "Distância (km)": float(distancia),
+                    # Sim=1, Não=0
+                    "lesao_encoded": encoder2.transform([historico_lesao])[0],
+                    "Pace (min/km)": float(pace),
+                    "Atividades/semana": int(atividades_semana),
+                    # Bem-estar=0, Emagrecimento=1, Maratona=2
+                    "objetivo_encoded": encoder1.transform([objetivo])[0],
+                }
+                previsao = modelo.predict(pd.DataFrame([dados_modelo]))[0]
+    
+                st.session_state["previsao"] = {
+                    0: "avancado",
+                    1: "iniciante",
+                    2: "intermediario"
+                }[previsao]
+    
+                st.session_state["previsao"] = previsao
+                st.session_state["historico_lesao"] = historico_lesao
+    
+            except Exception as e:
+                st.error("Erro ao processar. Verifique os dados e tente novamente.")
+    
+    
+    if st.session_state["dados_gerados"]:
+        if st.button("Verifique seu Treino"):
+            st.session_state["auto_gerar_pdf"] = True
+            st.switch_page("pagina_treino.py")
