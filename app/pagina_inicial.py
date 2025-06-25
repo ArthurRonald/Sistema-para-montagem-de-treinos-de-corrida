@@ -10,28 +10,25 @@ st.set_page_config(
 
 try:
     logo = Image.open("Movement Zone Running.png")
-    
-    col1, col2, col3 = st.columns([1, 3, 1])
-    with col2:
-        st.image(logo, width=280)  #centralizando essa mizera
-        st.markdown("---")  
-    
-    st.title("MZRunning", anchor=False)
-    st.caption("Seu assistente pessoal para treinos de corrida")  
 
-   
+    col1, col2, col3, col4 = st.columns([1, 1, 4, 2])
+    with col3:
+        st.image(logo, width=330)  # centralizando essa mizera
+        st.markdown("---")
+
+    st.title("MZRunning", anchor=False)
+    st.caption("Seu assistente pessoal para treinos de corrida")
+
     st.markdown("""
     Este site foi criado para ajudar pessoas que desejam melhorar sua rotina de treinos de corrida. 
     A partir de algumas informações simples, oferecemos sugestões personalizadas para tornar seus 
     treinos mais organizados e eficientes.
     """)
 
-    
     st.subheader("O que você encontra aqui:", anchor=False)
     st.markdown("""
     ✨ **Sistema interativo** - Formulário simples e intuitivo  
     🎯 **Treinos personalizados** - Adaptados ao seu perfil  
-    📱 **Acesso direto** - Sem necessidade de downloads  
     🔄 **Ajustes progressivos** - Feedbacks para evolução contínua  
     📅 **Organização semanal** - Lista de treinos dia a dia  
     📄 **Exportação para PDF** - Salve ou imprima seu plano  
@@ -45,5 +42,6 @@ try:
         st.switch_page("pagina_questionario.py")
 
 except FileNotFoundError:
-    st.error("Arquivo de logo não encontrado. Verifique o caminho: 'Movement Zone Running.png'")
-    st.title("MZRunning")  
+    st.error(
+        "Arquivo de logo não encontrado. Verifique o caminho: 'Movement Zone Running.png'")
+    st.title("MZRunning")
