@@ -13,7 +13,8 @@ nome = st.text_input(
     "👤 Nome completo",
     placeholder="Digite seu nome aqui",
     help="Insira seu nome completo para identificação.",
-    value=st.session_state.get("dados_usuario", {}).get("Nome", "")
+    value=st.session_state.get("dados_usuario", {}).get(
+        "Nome", "")  # mantém os dados digitados pelo usuário
 )
 
 peso = st.number_input(
@@ -110,6 +111,8 @@ modelo = joblib.load(os.path.join(CAMINHO_BASE, "modelo_utilizar.pkl"))
 encoder1 = joblib.load(os.path.join(CAMINHO_BASE, "encoder_objetivo.pkl"))
 encoder2 = joblib.load(os.path.join(CAMINHO_BASE, "encoder_lesao.pkl"))
 
+
+# Valida os dados do formulário antes de salvar
 dados_gerados = None
 
 erros = []
@@ -158,7 +161,7 @@ if st.button("🚀 Salvar dados"):
             for erro in erros:
                 st.error(erro)
         else:
-
+            # pacote de dados para salvar no session state (para perfil e gemini)
             dados = {
                 "Nome": str(nome_limpo),
                 "Peso (kg)": float(peso),
@@ -173,13 +176,13 @@ if st.button("🚀 Salvar dados"):
                 "Distância desejada": float(distancia1),
                 "Dias de treino": int(dias)
             }
-
+            # salvamento
             st.session_state["dados_usuario"] = dados
             st.session_state["dados_gerados"] = True
             st.success("✅ Dados coletados com sucesso!")
 
         if st.session_state.get("dados_gerados", False):
-            try:
+            try:  # pacote de dados para IA propria
                 dados_modelo = {
                     "Tempo (min)": int(tempo),
                     "Distância (km)": float(distancia),

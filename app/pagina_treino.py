@@ -166,11 +166,10 @@ if "dados_usuario" in st.session_state:
         if st.session_state.treinos[i]:
             st.markdown(f"✅ Treino Dia {dia}")
         elif i == proximo:
-            # Mostrar mensagem de sucesso se o último treino foi esse e ainda não clicou no próximo
+
             if st.session_state.ultimo_concluido == dia:
                 st.success(f"✅ Treino do Dia concluído com sucesso!")
 
-            # Mostra botão de conclusão
             if st.button(f"✅ Concluir Treino Dia {dia}"):
                 st.session_state.treinos[i] = True
                 # Marca o próximo dia como a próxima meta
@@ -179,11 +178,9 @@ if "dados_usuario" in st.session_state:
         else:
             st.markdown(f"🔒 Treino Dia {dia}")
 
-    # Barra de progresso
     progresso = sum(st.session_state.treinos) / TOTAL_DIAS
     st.progress(progresso)
 
-    # Mensagem final ao concluir todos os treinos
     if progresso == 1.0:
         st.success(
             f"🎉 Parabéns, você concluiu todos os seus treinos para alcançar seu objetivo de {dados["Distância desejada"]}Km!")
