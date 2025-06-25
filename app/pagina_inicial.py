@@ -29,6 +29,7 @@ try:
     st.markdown("""
     ✨ **Sistema interativo** - Formulário simples e intuitivo  
     🎯 **Treinos personalizados** - Adaptados ao seu perfil  
+    📱 **Acesso direto via navegador** - Não é necessário instalar nada
     🔄 **Ajustes progressivos** - Feedbacks para evolução contínua  
     📅 **Organização semanal** - Lista de treinos dia a dia  
     📄 **Exportação para PDF** - Salve ou imprima seu plano  
