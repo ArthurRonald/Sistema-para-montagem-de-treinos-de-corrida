@@ -119,19 +119,6 @@ if "dados_gerados" not in st.session_state:
 
 if st.button("🚀 Salvar dados"):
     
-    nome_limpo = nome.strip()
-
-    if not nome_limpo:
-        erros.append("❌ Informe seu Nome.")
-    elif not all(palavra.isalpha() for palavra in nome_limpo.split()):
-        erros.append(
-            "❌ O nome deve conter apenas letras e espaços. Números ou símbolos não são permitidos.")
-
-    if objetivo == "":
-        erros.append("❌ Selecione um objetivo de treino.")
-
-
-    # ... (código anterior permanece igual até a parte do botão "Salvar dados")
 
 if st.button("🚀 Salvar dados"):
 
