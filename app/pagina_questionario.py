@@ -117,8 +117,6 @@ erros = []
 if "dados_gerados" not in st.session_state:
     st.session_state["dados_gerados"] = False
 
-if st.button("🚀 Salvar dados"):
-    
 
 if st.button("🚀 Salvar dados"):
 
