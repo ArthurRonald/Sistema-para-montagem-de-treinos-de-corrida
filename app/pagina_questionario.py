@@ -183,18 +183,19 @@ if st.button("🚀 Salvar dados"):
 
         if st.session_state.get("dados_gerados", False):
             try:  # pacote de dados para IA propria
+                #aqui to pegando as informações do questionário e colocando como input
                 dados_modelo = {
                     "Tempo (min)": int(tempo),
                     "Distância (km)": float(distancia),
                     # Sim=1, Não=0
-                    "lesao_encoded": encoder2.transform([historico_lesao])[0],
+                    "lesao_encoded": encoder2.transform([historico_lesao])[0], #ta com índice 0 pq ta como forma de dataframe
                     "Pace (min/km)": float(pace),
                     "Atividades/semana": int(atividades_semana),
                     # Bem-estar=0, Emagrecimento=1, Maratona=2
                     "objetivo_encoded": encoder1.transform([objetivo])[0],
                 }
                 previsao = modelo.predict(pd.DataFrame([dados_modelo]))[0]
-
+                
                 st.session_state["previsao"] = {
                     0: "avancado",
                     1: "iniciante",
