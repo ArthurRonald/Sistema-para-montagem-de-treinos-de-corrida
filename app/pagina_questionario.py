@@ -36,8 +36,8 @@ historico_lesao = st.radio(
 
 
 tempo1 = st.number_input(
-    "Quanto tempo por dia você tem disponível para fazer seus treinos? (em min)", min_value=0, max_value=180, step=5,
-    value=st.session_state.get("dados_usuario", {}).get("Tempo disponivel", 0)
+    "Quanto tempo por dia você tem disponível para fazer seus treinos? (em min)", min_value=20, max_value=180, step=5,
+    value=st.session_state.get("dados_usuario", {}).get("Tempo disponivel", 20)
 )
 
 distancia1 = st.number_input(
@@ -48,8 +48,8 @@ distancia1 = st.number_input(
 
 dias = st.selectbox(
     "Escolha a quantidade de dias que você deseja dividir seu treino",
-    ["", 5, 7, 10, 15, 20, 25, 30],
-    index=["", 5, 7, 10, 15, 20, 25, 30].index(
+    ["", 3, 5, 7, 10, 15, 20, 25, 30],
+    index=["", 3, 5, 7, 10, 15, 20, 25, 30].index(
         st.session_state.get("dados_usuario", {}).get("Dias de treino", "")
     )
 )
@@ -130,19 +130,21 @@ if st.button("🚀 Salvar dados"):
 
     if objetivo == "":
         erros.append("❌ Selecione um objetivo de treino.")
-        
+
     if tempo1 <= 0:
         erros.append("❌ O tempo de atividade tem que ser maior que zero.")
     elif tempo1 < 20:
-        erros.append("❌ O tempo mínimo recomendado para treino é de 20 minutos.")
-        
+        erros.append(
+            "❌ O tempo mínimo recomendado para treino é de 20 minutos.")
+
     if distancia1 <= 0:
         erros.append("❌ A distância desejada deve ser maior que 0 km.")
     elif distancia1 > 42.2 and objetivo == "Maratona":
         erros.append("❌ A distância máxima para uma maratona é 42.2 km.")
-        
+
     if dias == "":
-        erros.append("❌ Selecione a quantidade de dias para dividir seu treino.")
+        erros.append(
+            "❌ Selecione a quantidade de dias para dividir seu treino.")
     elif dias <= 0:
         erros.append("❌ O número de dias de treino deve ser maior que 0.")
     elif dias > 30:
@@ -151,12 +153,12 @@ if st.button("🚀 Salvar dados"):
     if erros:
         for erro in erros:
             st.error(erro)
-    else:    
+    else:
         if erros:
             for erro in erros:
                 st.error(erro)
         else:
-    
+
             dados = {
                 "Nome": str(nome_limpo),
                 "Peso (kg)": float(peso),
@@ -171,11 +173,11 @@ if st.button("🚀 Salvar dados"):
                 "Distância desejada": float(distancia1),
                 "Dias de treino": int(dias)
             }
-    
+
             st.session_state["dados_usuario"] = dados
             st.session_state["dados_gerados"] = True
             st.success("✅ Dados coletados com sucesso!")
-    
+
         if st.session_state.get("dados_gerados", False):
             try:
                 dados_modelo = {
@@ -189,20 +191,20 @@ if st.button("🚀 Salvar dados"):
                     "objetivo_encoded": encoder1.transform([objetivo])[0],
                 }
                 previsao = modelo.predict(pd.DataFrame([dados_modelo]))[0]
-    
+
                 st.session_state["previsao"] = {
                     0: "avancado",
                     1: "iniciante",
                     2: "intermediario"
                 }[previsao]
-    
+
                 st.session_state["previsao"] = previsao
                 st.session_state["historico_lesao"] = historico_lesao
-    
+
             except Exception as e:
-                st.error("Erro ao processar. Verifique os dados e tente novamente.")
-    
-    
+                st.error(
+                    "Erro ao processar. Verifique os dados e tente novamente.")
+
     if st.session_state["dados_gerados"]:
         if st.button("Verifique seu Treino"):
             st.session_state["auto_gerar_pdf"] = True
