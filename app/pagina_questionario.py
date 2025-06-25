@@ -205,7 +205,7 @@ if st.button("🚀 Salvar dados"):
                 st.error(
                     "Erro ao processar. Verifique os dados e tente novamente.")
 
-    if st.session_state["dados_gerados"]:
-        if st.button("Verifique seu Treino"):
-            st.session_state["auto_gerar_pdf"] = True
-            st.switch_page("pagina_treino.py")
+if st.session_state["dados_gerados"]:
+    if st.button("Verifique seu Treino"):
+        st.session_state["auto_gerar_pdf"] = True
+        st.switch_page("pagina_treino.py")

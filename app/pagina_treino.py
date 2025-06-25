@@ -124,7 +124,8 @@ if all(campo in dados_usuario for campo in campos_necessarios):
         # botao de download do pdf
         pdf_bytes = gerar_pdf(dados_usuario.get(
             "Nome", "Usuário"), treino_texto_limpo)
-        st.subheader(f"✅ Plano de treino gerado com sucesso! Seu nível ideal para sua atividade é **{nivel_texto}**")
+        st.subheader(
+            f"✅ Plano de treino gerado com sucesso! Seu nível ideal para sua atividade é **{nivel_texto}**")
         botao_download = st.download_button(
             label="📥 Baixar Treino em PDF",
             data=pdf_bytes,
