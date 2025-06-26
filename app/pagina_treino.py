@@ -8,9 +8,8 @@ API_KEY = "AIzaSyBUb0tOQMD1mrcAu5DCtaAMEU_zer7nxwE"
 genai.configure(api_key=API_KEY)
 
 # funcao pra pedir o treino pra o gemini
-
-
-def gerar_treino_personalizado(entrada_ia, nivel_texto):
+#prompt é o que a ia irá receber como pedido
+def gerar_treino_personalizado(entrada_ia):
     prompt = f"""
     Você é um treinador especialista em corrida.
 
@@ -31,31 +30,33 @@ def gerar_treino_personalizado(entrada_ia, nivel_texto):
     - Dias totais de treino: {entrada_ia['dias_de_treino']} dias
 
     Deixe todo treino organizado de maneira justificada. Liste todas as variáveis na introdução do treino.  Nível, peso, altura, tempo medio, tudo... Divida o plano por dia, seja específico com os tipos de treino (ex: Trote leve 30min, Intervalado, Longão).
-    Não use academia nem equipamentos avançados. Não use negrito em nenhuma palavra. Acentue corretamente as palavras, mas não use caracteres como emojis, asteriscos nem traços (hifens), exceto acentos graficos de pontuaçao (não precisa dizer na resposta que não vai usar esses caracteres.)
+    Não use academia nem equipamentos avançados. Não use negrito em nenhuma palavra. Acentue corretamente as palavras, mas não use caracteres como emojis, asteriscos nem traços (hifens), exceto acentos graficos de pontuaçao (não precisa dizer na resposta que não vai usar esses caracteres.) Para separar as linhas, nao use nenhum caractere especial.
     """
 
-    model = genai.GenerativeModel('gemini-2.5-flash')
+    model = genai.GenerativeModel('gemini-2.5-flash') 
 
     try:
-        response = model.generate_content(prompt)
-        return response.text
-    except Exception as e:
+        response = model.generate_content(prompt) #aqui pede pra ia gerar
+        return response.text # e retorna pra essa variavel a resposta
+    
+    except Exception as e: #caso de erro, é capturado e retorna uma mensagem
         st.error(f"Erro ao gerar o treino: {e}")
         return "❌ Não foi possível gerar o treino no momento."
 
 
-def gerar_pdf(nome, treino_texto):
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", "B", 16)
+def gerar_pdf(nome, treino_texto): #argumentos pra dizer o nome e colocar o treino no pdf
+    pdf = FPDF() 
+    pdf.add_page() #adiciona a pagina
+    pdf.set_font("Arial", "B", 16) #fonte, negrito, tamanho
     pdf.cell(
-        0, 10, f"Plano de Treino Personalizado para {nome}", ln=True, align='C')
+        0, 10, f"Plano de Treino Personalizado para {nome}", ln=True, align='C') 
+    #ocupa toda a largura, define a altura, proximo comando vai pra outra linha, centralizado
 
-    pdf.set_font("Arial", "", 12)
-    for linha in treino_texto.split('\n'):
+    pdf.set_font("Arial", "", 12) #nao negrito
+    for linha in treino_texto.split('\n'): #divide a resposta da ia em linhas, e roda em loop
         pdf.multi_cell(0, 10, linha)
 
-    return pdf.output(dest='S').encode('latin-1')  # retorna o download do pdf
+    return pdf.output(dest='S').encode('latin-1')  #salva o pdf na memoria (bytes)
 
 
 # funcao pra nao quebrar se vier emoji ou outro unicode
@@ -67,7 +68,7 @@ titulo = st.title("🏃 Treino Personalizado")
 
 # ia de previsao numerica
 previsao_numerica = st.session_state.get("previsao")
-nivel_texto = ""
+nivel_texto = "" #inicializa a string como vazia
 
 if previsao_numerica == 0:
     nivel_texto = "Avançado"
@@ -78,12 +79,15 @@ elif previsao_numerica == 2:
 else:
     st.error("Nível não reconhecido. Por favor, refaça o questionário.")
 
-dados_usuario = st.session_state.get("dados_usuario", {})
+dados_usuario = st.session_state.get("dados_usuario", {}) #puxa os dados do cara
 
 
-# conferir dados
+# conferir alguns dados
 campos_necessarios = ["objetivo_encoded",
                       "Distância (km)", "Atividades/semana", "Tempo (min)", "lesao_encoded"]
+
+#funcao all gera um true ou false
+#so e true se todos os campos estiverem em dados usuario
 if all(campo in dados_usuario for campo in campos_necessarios):
 
     # dados pro prompt
@@ -108,30 +112,29 @@ if all(campo in dados_usuario for campo in campos_necessarios):
         if "Treino ia" not in st.session_state:  # so gera o pdf se for a primeira vez
 
             with st.spinner("Criação do treino em progresso. Aguarde alguns instantes..."):
-                treino_texto = gerar_treino_personalizado(
-                    entrada_ia, nivel_texto)
-                treino_texto_limpo = limpar_texto_pdf(
-                    treino_texto)  # chama a funcao pra nao quebrar
-                st.session_state["Treino ia"] = treino_texto_limpo
+                
+                treino_texto = gerar_treino_personalizado(entrada_ia) #gera o treino com base na entrada ia
+                treino_texto_limpo = limpar_texto_pdf(treino_texto)  # chama a funcao de ajeitar os unicode
+                st.session_state["Treino ia"] = treino_texto_limpo #salva na memoria o treino
 
         # Pra nao gerar infinitamente
-        st.session_state["auto_gerar_pdf"] = False
+        st.session_state["auto_gerar_pdf"] = False 
 
     if "Treino ia" in st.session_state:
 
-        treino_texto_limpo = st.session_state["Treino ia"]
+        treino_texto_limpo = st.session_state["Treino ia"] #define de novo pra nao quebrar
 
         # botao de download do pdf
         pdf_bytes = gerar_pdf(dados_usuario.get(
-            "Nome", "Usuário"), treino_texto_limpo)
+            "Nome", "Usuário"), treino_texto_limpo) #se nao achar o nome usa usuario e gera o pdf
         st.subheader(
             f"✅ Plano de treino gerado com sucesso! Seu nível ideal para sua atividade é **{nivel_texto}**")
         botao_download = st.download_button(
             label="📥 Baixar Treino em PDF",
             data=pdf_bytes,
             file_name="treino_personalizado.pdf",
-            mime="application/pdf"
-        )
+            mime="application/pdf" #define o tipo pro navegador entender
+        ) 
 
 
 else:
