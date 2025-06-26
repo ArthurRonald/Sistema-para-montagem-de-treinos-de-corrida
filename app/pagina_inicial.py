@@ -13,7 +13,7 @@ try:
 
     col1, col2, col3, col4 = st.columns([1, 1, 4, 2])
     with col3:
-        st.image(logo, width=330)  # centralizando essa mizera
+        st.image(logo, width=330)  # centralizando
         st.markdown("---")
 
     st.title("MZRunning", anchor=False)
