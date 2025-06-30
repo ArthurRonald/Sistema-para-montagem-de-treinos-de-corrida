@@ -4,30 +4,41 @@ Este site foi criado para ajudar pessoas que desejam melhorar sua rotina de trei
 
 ## 🎯 Funcionalidades principais
 
-- ✨ **Sistema interativo**  
-  Formulário simples e intuitivo, facilitando a entrada de dados.
+- ✨ **Sistema interativo**: formulário simples e intuitivo para facilitar a entrada de dados.
+- 🎯 **Treinos personalizados**: adaptados ao seu perfil e objetivos (5K, 10K, meia maratona, maratona) e nível (iniciante, intermediário, avançado).
+- 📱 **Acesso direto via navegador**: tudo funciona direto no navegador, sem precisar instalar nada.
+- 🔄 **Ajustes progressivos**: adapta e evolui o plano conforme feedback.
+- 📅 **Organização semanal**: treinos distribuídos de forma clara por dias da semana.
+- 📄 **Exportação para PDF**: gere uma versão do plano para salvar ou imprimir.
+- 🧠 **IA especializada**: inteligência artificial focada em treinamento esportivo.
+- 🤖 **Tecnologia Gemini**: recomendações precisas e individualizadas com modelos avançados.
 
-- 🎯 **Treinos personalizados**  
-  Adaptados ao seu perfil, objetivos (como 5K, 10K, meia maratona, maratona) e nível (iniciante, intermediário, avançado).
+## 🖥️ Como rodar localmente
 
-- 📱 **Acesso direto via navegador**  
-  Não é necessário instalar nada — tudo funciona direto do seu navegador.
+Para rodar este projeto na sua máquina usando **Streamlit**, siga os passos abaixo:
 
-- 🔄 **Ajustes progressivos**  
-  O sistema utiliza feedbacks para adaptar e evoluir seu plano de treino.
+1️⃣ Clone o repositório ou baixe os arquivos.
 
-- 📅 **Organização semanal**  
-  Treinos distribuídos de forma clara por dias da semana.
+2️⃣ Instale as dependências do projeto:
 
-- 📄 **Exportação para PDF**  
-  Gere uma versão do seu plano para salvar ou imprimir.
+```bash
+pip install -r requirements.txt
+```
 
-- 🧠 **IA especializada**  
-  Inteligência artificial desenvolvida com foco em treinamento esportivo.
+3️⃣ Abra o terminal e navegue até a pasta onde está o arquivo `app.py`:
 
-- 🤖 **Tecnologia Gemini**  
-  Utiliza modelos avançados para recomendações precisas e individualizadas.
+```bash
+cd app
+```
+
+4️⃣ Execute o site com o comando:
+
+```bash
+streamlit run app.py
+```
+
+O site abrirá automaticamente no seu navegador, pronto para uso.
 
 ## 📌 Objetivo
 
-Fornecer uma ferramenta prática e inteligente para corredores que desejam estruturar seus treinos de forma mais eficiente, com base em princípios de individualização, progressão de carga, periodização e adesão ao plano.
+Fornecer uma ferramenta prática e inteligente para corredores que desejam estruturar seus treinos de forma mais eficiente, utilizando princípios de individualização, progressão de carga, periodização e adesão ao plano.
